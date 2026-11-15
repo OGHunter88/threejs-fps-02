@@ -10,7 +10,7 @@ import { createMap, SITES, SPAWNS } from './map.js';
 import { createBody } from './player.js';
 import { createGun, createViewModel, WEAPONS, GRENADE, HEAD_MULT } from './weapons.js';
 import { createBots } from './bots.js';
-import { createRounds, BOMB_TIME } from './rounds.js';
+import { createRounds, BOMB_TIME, FREEZE_TIME } from './rounds.js';
 import { createInput } from './input.js';
 import { createHud } from './hud.js';
 import { createAudio } from './audio.js';
