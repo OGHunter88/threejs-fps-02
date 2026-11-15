@@ -41,12 +41,12 @@ const random = shot ? mulberry32(seed) : Math.random;
 // boots on any WebGL-capable browser instead of dying before the canvas.
 let renderer;
 try {
-  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: !!shot });
 } catch (e1) {
   try {
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: !!shot });
   } catch (e2) {
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: !!shot });
   }
 }
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -590,6 +590,12 @@ function paintTwiceThenReady() {
     if (painted === 2) {
       window.__shotReady = true;
       game.frozen = true;
+      // &dl=1 turns the staged frame into a downloadable JPEG: the page
+      // navigates to the canvas as an image, so a browser can save it.
+      // Only used when capturing screenshots for the entry.
+      if (params.get('dl')) {
+        window.location.href = renderer.domElement.toDataURL('image/jpeg', 0.85);
+      }
     }
   }
   requestAnimationFrame(paint);
