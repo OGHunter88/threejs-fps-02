@@ -232,6 +232,23 @@
   </section>
 </div>
 
+<div id="boot-error" style="display:none; position:fixed; top:0; left:0; right:0; z-index:9999; background:#b00020; color:#fff; font:13px ui-monospace, Menlo, monospace; padding:8px 10px; white-space:pre-wrap;"></div>
+<script>
+// Boot-error trap: if the game module fails before it can draw, show the
+// exact error on the page instead of a silent black canvas. It only fires
+// on a real error; it never touches gameplay.
+window.addEventListener('error', function (e) {
+  var d = document.getElementById('boot-error');
+  d.style.display = 'block';
+  d.textContent = 'BOOT ERROR: ' + (e.message || e.error) + ' @ ' + (e.filename || '') + ':' + (e.lineno || '');
+  document.title = 'BOOT ERROR: ' + (e.message || 'unknown');
+});
+window.addEventListener('unhandledrejection', function (e) {
+  var d = document.getElementById('boot-error');
+  d.style.display = 'block';
+  d.textContent = 'UNHANDLED: ' + (e.reason && e.reason.message ? e.reason.message : e.reason);
+});
+</script>
 <script type="importmap">
 {
   "imports": {

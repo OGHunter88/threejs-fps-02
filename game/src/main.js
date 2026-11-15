@@ -35,7 +35,20 @@ function mulberry32(initial) {
 }
 const random = shot ? mulberry32(seed) : Math.random;
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+// The renderer is the one call that touches the GPU, and a strict option can
+// refuse a context where a plain one succeeds (software GL, for instance).
+// Try the preferred setup first, then fall back step by step so the game
+// boots on any WebGL-capable browser instead of dying before the canvas.
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+} catch (e1) {
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+  } catch (e2) {
+    renderer = new THREE.WebGLRenderer();
+  }
+}
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
